@@ -1,0 +1,10 @@
+name: Shards
+main: com.caved_in.shards.Shards
+version: ${project.version}
+description: Gifts are always better unexpected!
+author: Brandon Curtis
+depend: [Commons]
+commands:
+   shards:
+      description: Perform administrative tasks from within the game
+      usage: /<command>

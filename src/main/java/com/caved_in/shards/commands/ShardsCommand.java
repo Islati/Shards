@@ -14,6 +14,8 @@ import com.caved_in.commons.menu.PageDisplay;
 import com.caved_in.commons.player.Players;
 import com.caved_in.shards.ShardProperties;
 import com.caved_in.shards.Shards;
+import com.caved_in.shards.special.ShardBomb;
+import com.caved_in.shards.special.ShardFountain;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -54,8 +56,8 @@ public class ShardsCommand {
 	}
 
 	@Command(identifier = "shards bomb")
-	@Flags(identifier = "-cursor",description = {"Start the shard bomb above your cursors location"})
-	public void onShardsBombCommand(Player p, @Arg(name = "power", def="10") int power, @Arg(name = "duration",def = "25")int duration, @Arg(name = "height-above",def = "10")int height,@FlagArg("-cursor")boolean cursor) {
+	@Flags(identifier = {"-cursor","-player"},description = {"Start the shard bomb above your cursors location","Whether or not to bomb players individually, or "})
+	public void onShardsBombCommand(Player p, @Arg(name = "power", def="10") int power, @Arg(name = "duration",def = "25")int duration, @Arg(name = "height-above",def = "10")int height,@FlagArg("-cursor")boolean cursor,@FlagArg("-player")boolean playerBomb) {
 		Location loc = null;
 
 		if (cursor) {
@@ -65,8 +67,14 @@ public class ShardsCommand {
 		}
 
 		loc.setY(loc.getY() + height);
-
-		Shards.bomb(loc,power,duration);
+		
+		ShardBomb bomb = new ShardBomb(loc).power(power).duration(duration).nearPlayers(playerBomb);
+		Shards.bomb(bomb,true);
+	}
+	
+	@Command(identifier = "shards fountain")
+	public void onShardFountainCommand(Player p) {
+		Shards.fountain(new ShardFountain().location(p.getEyeLocation()));
 	}
 
 }

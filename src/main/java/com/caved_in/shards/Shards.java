@@ -8,19 +8,20 @@ import com.caved_in.commons.plugin.BukkitPlugin;
 import com.caved_in.commons.utilities.NumberUtil;
 import com.caved_in.commons.world.Worlds;
 import com.caved_in.shards.commands.ShardsCommand;
-import com.caved_in.shards.effects.ShardBomb;
+import com.caved_in.shards.special.ShardBomb;
 import com.caved_in.shards.listeners.EntityDeathListener;
 import com.caved_in.shards.listeners.ItemPickupListener;
 import com.caved_in.shards.listeners.PlayerDeathListener;
+import com.caved_in.shards.special.ShardFountain;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 public class Shards extends BukkitPlugin {
+	//todo create shards "pinata" which is a multi-color sheep that when whacked spews out shards
 	private static final String META_IDENTIFIER = "TUNNELS_SHARD";
 	private static Shards instance;
 
@@ -107,7 +108,7 @@ public class Shards extends BukkitPlugin {
 	 * @return shard that was spawned
 	 */
 	public static Item spawn(Location loc, int worth) {
-		Item shard = Worlds.dropItem(loc, ItemBuilder.of(ShardProperties.SHARD_MATERIAL).item());
+		Item shard = Worlds.dropItem(loc, Items.makeItem(ShardProperties.SHARD_MATERIAL));
 		//If the shards are to appear on-fire, then do so!
 		if (ShardProperties.SHARDS_ON_FIRE) {
 			shard.setFireTicks(Integer.MAX_VALUE);
@@ -117,15 +118,34 @@ public class Shards extends BukkitPlugin {
 		return shard;
 	}
 
-	public static void bomb(Location loc,int power, int durationSeconds) {
+	public static void bomb(Location loc,int power, int durationSeconds, boolean broadcastBomb) {
 		Shards shards = getInstance();
 
 		ShardBomb bomb = new ShardBomb(loc).duration(durationSeconds).power(power);
 
-		shardBombTitle.broadcast();
-
+		if (broadcastBomb) {
+			shardBombTitle.broadcast();
+		}
+		
 		for(int i = 0; i < durationSeconds; i++) {
 			shards.getThreadManager().runTaskLater(bomb::explode,100 + (i * 20));
+		}
+	}
+	
+	public static void fountain(ShardFountain fountain) {
+		getInstance().getThreadManager().registerSyncRepeatTask("Fountain @ " + Messages.locationCoords(fountain.location),fountain,0,fountain.period);
+	}
+	
+	public static void bomb(ShardBomb bomb, boolean broadcast) {
+		int delay = 0;
+		
+		if (broadcast) {
+			shardBombTitle.broadcast();
+			delay = 100;
+		}
+		
+		for(int i = 0; i < bomb.duration(); i++) {
+			getInstance().getThreadManager().runTaskLater(bomb::explode,delay + (i * 20));
 		}
 	}
 

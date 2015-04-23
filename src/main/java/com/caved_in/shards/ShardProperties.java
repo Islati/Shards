@@ -1,5 +1,8 @@
 package com.caved_in.shards;
 
+import com.caved_in.commons.effect.ParticleEffects;
+import com.caved_in.commons.utilities.ArrayUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -13,15 +16,25 @@ public class ShardProperties {
 
 	/* Used to select a location in the radius from where shards drop from a shard bomb*/
 	public static double SHARD_BOMB_VARIATION = 15.5;
+	
+	public static double SHARD_BOMB_PLAYER_VARIATION = 1.0;
 
 	public static int SHARDS_BOMB_MIN_WORTH = 3;
 	public static int SHARDS_BOMB_MAX_WORTH = 7;
+	
+	public static int SHARDS_BOMB_PLAYER_MIN_WORTH = 1;
+	
+	public static int SHARDS_BOMB_PLAYER_MAX_WORTH = 3;
 
 	/* The minimum amount of shards to spawn per power-level of the bomb. */
 	public static int SHARD_BOMB_MIN = 5;
 
 	/* The maxiumum amount of shards to spawn per power-level of the bomb */
 	public static int SHARD_BOMB_MAX = 10;
+	
+	public static int SHARD_BOMB_PLAYER_MIN = 2;
+	
+	public static int SHARD_BOMB_PLAYER_MAX = 3;
 
 	/* The minimum amount of currency awarded by the shard. */
 	public static int MIN_SHARD_AWARD = 5;
@@ -40,16 +53,16 @@ public class ShardProperties {
 
 	static {
 		//Creepers have a 10% chance to drop a shard.
-		setMobDropChance(EntityType.CREEPER,10);
+		setMobDropChance(EntityType.CREEPER,5);
 
 		//Skeletons have a 5% chance to drop a shard
-		setMobDropChance(EntityType.SKELETON,5);
+		setMobDropChance(EntityType.SKELETON,4);
 
 		//Blazes have a 8% chance to drop a shard.
-		setMobDropChance(EntityType.BLAZE, 8);
+		setMobDropChance(EntityType.BLAZE, 4);
 
 		//Enderman have a 9% chance to drop a shard.
-		setMobDropChance(EntityType.ENDERMAN, 9);
+		setMobDropChance(EntityType.ENDERMAN,5);
 
 		//Ghasts have a 11% chance of dropping a shard.
 		setMobDropChance(EntityType.GHAST,11);
@@ -78,5 +91,11 @@ public class ShardProperties {
 	public static void setAwardRange(int min, int max) {
 		MIN_SHARD_AWARD = min;
 		MAX_SHARD_AWARD = max;
+	}
+	
+	private static final ParticleEffects[] SPAWN_EFFECTS = {ParticleEffects.EXPLOSION_NORMAL,ParticleEffects.CRIT,ParticleEffects.HEART,ParticleEffects.BUBBLE,ParticleEffects.NOTE};
+	public static ParticleEffects getRandomSpawnEffect() {
+		return ArrayUtils.getRandom(SPAWN_EFFECTS);
+		
 	}
 }

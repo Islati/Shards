@@ -40,7 +40,7 @@ public class ItemPickupListener implements Listener {
 		Players.giveMoney(p,worth,false);
 
 		//Send them a message saying what they found
-		Chat.message(p,String.format("&aYou've found &6%s&a &eshards&a earning you &e%s &axp",itemCount,worth));
+		Chat.actionMessage(p,String.format("&aYou've found &6%s&a &eshards&a earning you &e%s &axp",itemCount,worth));
 
 		//Remove the item, as we don't need it anymore.
 		item.remove();
